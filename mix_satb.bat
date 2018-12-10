@@ -10,25 +10,30 @@ SET album=Teach tracks
 SET year=2018
 SET genre=Teach tracks
 
+SET voice1_text=Soprano
+SET voice2_text=Alto
+SET voice3_text=Tenor
+SET voice4_text=Bass
+
 rem input files
 SET in_base=raw/Cool Song
 SET in_fext=.flac
-SET in_soprano=%in_base%-Soprano%in_fext%
-SET in_alto=%in_base%-Alto%in_fext%
-SET in_tenor=%in_base%-Tenor%in_fext%
-SET in_bass=%in_base%-Bass%in_fext%
+SET in_voice1=%in_base%-%voice1_text%%in_fext%
+SET in_voice2=%in_base%-%voice2_text%%in_fext%
+SET in_voice3=%in_base%-%voice3_text%%in_fext%
+SET in_voice4=%in_base%-%voice4_text%%in_fext%
 
 rem output files
 SET out_base=Cool Song
 SET out_fext=.ogg
-SET out_soprano=%out_base% - Soprano%out_fext%
-SET out_alto=%out_base% - Alto%out_fext%
-SET out_tenor=%out_base% - Tenor%out_fext%
-SET out_bass=%out_base% - Bass%out_fext%
-SET out_soprano_dom=%out_base% - Soprano Dominant%out_fext%
-SET out_alto_dom=%out_base% - Alto Dominant%out_fext%
-SET out_tenor_dom=%out_base% - Tenor Dominant%out_fext%
-SET out_bass_dom=%out_base% - Bass Dominant%out_fext%
+SET out_voice1=%out_base% - %voice1_text%%out_fext%
+SET out_voice2=%out_base% - %voice2_text%%out_fext%
+SET out_voice3=%out_base% - %voice3_text%%out_fext%
+SET out_voice4=%out_base% - %voice4_text%%out_fext%
+SET out_voice1_dom=%out_base% - %voice1_text% Dominant%out_fext%
+SET out_voice2_dom=%out_base% - %voice2_text% Dominant%out_fext%
+SET out_voice3_dom=%out_base% - %voice3_text% Dominant%out_fext%
+SET out_voice4_dom=%out_base% - %voice4_text% Dominant%out_fext%
 SET out_all=%out_base% - All parts%out_fext%
 
 rem mixing weights
@@ -40,75 +45,75 @@ rem End of parameters
 rem ------------------------------------------------------------
 
 ffmpeg -y ^
--i "%in_soprano%" ^
--metadata title="%title% - Soprano" ^
+-i "%in_voice1%" ^
+-metadata title="%title% - %voice1_text%" ^
 -metadata album="%album%" ^
 -metadata year="%year%" ^
 -metadata genre="%genre%" ^
-"%out_soprano%"
+"%out_voice1%"
 
 ffmpeg -y ^
--i "%in_alto%" ^
--metadata title="%title% - Alto" ^
+-i "%in_voice2%" ^
+-metadata title="%title% - %voice2_text%" ^
 -metadata album="%album%" ^
 -metadata year="%year%" ^
 -metadata genre="%genre%" ^
-"%out_alto%"
+"%out_voice2%"
 
 ffmpeg -y ^
--i "%in_tenor%" ^
--metadata title="%title% - Tenor" ^
+-i "%in_voice3%" ^
+-metadata title="%title% - %voice3_text%" ^
 -metadata album="%album%" ^
 -metadata year="%year%" ^
 -metadata genre="%genre%" ^
-"%out_tenor%"
+"%out_voice3%"
 
 ffmpeg -y ^
--i "%in_bass%" ^
--metadata title="%title% - Bass" ^
+-i "%in_voice4%" ^
+-metadata title="%title% - %voice4_text%" ^
 -metadata album="%album%" ^
 -metadata year="%year%" ^
 -metadata genre="%genre%" ^
-"%out_bass%"
+"%out_voice4%"
 
 ffmpeg -y ^
--i "%in_soprano%" -i "%in_alto%" -i "%in_tenor%" -i "%in_bass%" ^
+-i "%in_voice1%" -i "%in_voice2%" -i "%in_voice3%" -i "%in_voice4%" ^
 -filter_complex "amix=inputs=4:duration=first:dropout_transition=3:weights=%dom_w% %nondom_w% %nondom_w% %nondom_w%" ^
--metadata title="%title% - Soprano Dominant" ^
+-metadata title="%title% - %voice1_text% Dominant" ^
 -metadata album="%album%" ^
 -metadata year="%year%" ^
 -metadata genre="%genre%" ^
-"%out_soprano_dom%"
+"%out_voice1_dom%"
 
 ffmpeg -y ^
--i "%in_soprano%" -i "%in_alto%" -i "%in_tenor%" -i "%in_bass%" ^
+-i "%in_voice1%" -i "%in_voice2%" -i "%in_voice3%" -i "%in_voice4%" ^
 -filter_complex "amix=inputs=4:duration=first:dropout_transition=3:weights=%nondom_w% %dom_w% %nondom_w% %nondom_w%" ^
--metadata title="%title% - Alto Dominant" ^
+-metadata title="%title% - %voice2_text% Dominant" ^
 -metadata album="%album%" ^
 -metadata year="%year%" ^
 -metadata genre="%genre%" ^
-"%out_alto_dom%"
+"%out_voice2_dom%"
 
 ffmpeg -y ^
--i "%in_soprano%" -i "%in_alto%" -i "%in_tenor%" -i "%in_bass%" ^
+-i "%in_voice1%" -i "%in_voice2%" -i "%in_voice3%" -i "%in_voice4%" ^
 -filter_complex "amix=inputs=4:duration=first:dropout_transition=3:weights=%nondom_w% %nondom_w% %dom_w% %nondom_w%" ^
--metadata title="%title% - Tenor Dominant" ^
+-metadata title="%title% - %voice3_text% Dominant" ^
 -metadata album="%album%" ^
 -metadata year="%year%" ^
 -metadata genre="%genre%" ^
-"%out_tenor_dom%"
+"%out_voice3_dom%"
 
 ffmpeg -y ^
--i "%in_soprano%" -i "%in_alto%" -i "%in_tenor%" -i "%in_bass%" ^
+-i "%in_voice1%" -i "%in_voice2%" -i "%in_voice3%" -i "%in_voice4%" ^
 -filter_complex "amix=inputs=4:duration=first:dropout_transition=3:weights=%nondom_w% %nondom_w% %nondom_w% %dom_w%" ^
--metadata title="%title% - Bass Dominant" ^
+-metadata title="%title% - %voice4_text% Dominant" ^
 -metadata album="%album%" ^
 -metadata year="%year%" ^
 -metadata genre="%genre%" ^
-"%out_bass_dom%"
+"%out_voice4_dom%"
 
 ffmpeg -y ^
--i "%in_soprano%" -i "%in_alto%" -i "%in_tenor%" -i "%in_bass%" ^
+-i "%in_voice1%" -i "%in_voice2%" -i "%in_voice3%" -i "%in_voice4%" ^
 -filter_complex "amix=inputs=4:duration=first:dropout_transition=3" ^
 -metadata title="%title% - All parts" ^
 -metadata album="%album%" ^
