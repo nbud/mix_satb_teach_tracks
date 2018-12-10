@@ -35,6 +35,10 @@ SET out_voice2_dom=%out_base% - %voice2_text% Dominant%out_fext%
 SET out_voice3_dom=%out_base% - %voice3_text% Dominant%out_fext%
 SET out_voice4_dom=%out_base% - %voice4_text% Dominant%out_fext%
 SET out_all=%out_base% - All parts%out_fext%
+SET out_voice1_sans=%out_base% - %voice1_text% Sans%out_fext%
+SET out_voice2_sans=%out_base% - %voice2_text% Sans%out_fext%
+SET out_voice3_sans=%out_base% - %voice3_text% Sans%out_fext%
+SET out_voice4_sans=%out_base% - %voice4_text% Sans%out_fext%
 
 rem mixing weights
 SET dom_w=150
@@ -44,6 +48,7 @@ rem ------------------------------------------------------------
 rem End of parameters
 rem ------------------------------------------------------------
 
+rem Vanilla ----------------------------------------------------
 ffmpeg -y ^
 -i "%in_voice1%" ^
 -metadata title="%title% - %voice1_text%" ^
@@ -76,6 +81,7 @@ ffmpeg -y ^
 -metadata genre="%genre%" ^
 "%out_voice4%"
 
+rem Dominant ---------------------------------------------------
 ffmpeg -y ^
 -i "%in_voice1%" -i "%in_voice2%" -i "%in_voice3%" -i "%in_voice4%" ^
 -filter_complex "amix=inputs=4:duration=first:dropout_transition=3:weights=%dom_w% %nondom_w% %nondom_w% %nondom_w%" ^
@@ -112,6 +118,7 @@ ffmpeg -y ^
 -metadata genre="%genre%" ^
 "%out_voice4_dom%"
 
+rem All --------------------------------------------------------
 ffmpeg -y ^
 -i "%in_voice1%" -i "%in_voice2%" -i "%in_voice3%" -i "%in_voice4%" ^
 -filter_complex "amix=inputs=4:duration=first:dropout_transition=3" ^
@@ -121,3 +128,39 @@ ffmpeg -y ^
 -metadata genre="%genre%" ^
 "%out_all%"
 
+rem Sans -------------------------------------------------------
+ffmpeg -y ^
+-i "%in_voice2%" -i "%in_voice3%" -i "%in_voice4%" ^
+-filter_complex "amix=inputs=3:duration=first:dropout_transition=3" ^
+-metadata title="%title% - %voice1_text% Sans" ^
+-metadata album="%album%" ^
+-metadata year="%year%" ^
+-metadata genre="%genre%" ^
+"%out_voice1_sans%"
+
+ffmpeg -y ^
+-i "%in_voice1%" -i "%in_voice3%" -i "%in_voice4%" ^
+-filter_complex "amix=inputs=3:duration=first:dropout_transition=3" ^
+-metadata title="%title% - %voice2_text% Sans" ^
+-metadata album="%album%" ^
+-metadata year="%year%" ^
+-metadata genre="%genre%" ^
+"%out_voice2_sans%"
+
+ffmpeg -y ^
+-i "%in_voice1%" -i "%in_voice2%" -i "%in_voice4%" ^
+-filter_complex "amix=inputs=3:duration=first:dropout_transition=3" ^
+-metadata title="%title% - %voice3_text% Sans" ^
+-metadata album="%album%" ^
+-metadata year="%year%" ^
+-metadata genre="%genre%" ^
+"%out_voice3_sans%"
+
+ffmpeg -y ^
+-i "%in_voice1%" -i "%in_voice2%" -i "%in_voice3%" ^
+-filter_complex "amix=inputs=3:duration=first:dropout_transition=3" ^
+-metadata title="%title% - %voice4_text% Sans" ^
+-metadata album="%album%" ^
+-metadata year="%year%" ^
+-metadata genre="%genre%" ^
+"%out_voice4_sans%"
